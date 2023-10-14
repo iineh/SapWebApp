@@ -37,3 +37,10 @@ steps:
       archiveFile: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
       replaceExistingArchive: true
 
+  - task: AzureWebApp@1
+    inputs:
+      azureSubscription: 'aks_spn'
+      appType: 'webApp'
+      appName: 'biceplabdotnet'
+      package: '$(System.DefaultWorkingDirectory)/*.zip'
+      deploymentMethod: 'auto'
