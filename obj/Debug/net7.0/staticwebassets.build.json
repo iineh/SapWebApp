@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "WVIx48ZllO2Yd4Sr9HfXHD5TQ0BA2lOLUy5F/h1ufzY=",
+  "Source": "SapWebApp",
+  "BasePath": "_content/SapWebApp",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
