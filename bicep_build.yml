@@ -11,23 +11,44 @@ pool:
   name: self
 
 steps:
+  - task: PowerShell@2
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/az_install.ps1'
   - task: UseDotNet@2
     inputs:
       version: '6.x'
 
+  - script: dotnet restore
+    displayName: 'Restore Dependencies'
 
+  - script: dotnet build --configuration $(buildConfiguration)
+    displayName: 'Build Project'
 
-  - task: PowerShell@2
+  - script: dotnet test
+    displayName: 'Run Tests'
+
+  - script: dotnet publish --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)
+    displayName: 'Publish Artifact'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: drop'
     inputs:
-      filePath: '$(System.DefaultWorkingDirectory)/az_install.ps1'
+      PathtoPublish: $(Build.ArtifactStagingDirectory)
+      ArtifactName: 'drop'
 
-  - task: AzureCLI@2
-    displayName: 'Install Azure Bicep'
+  # - task: AzureCLI@2
+  #   displayName: 'Install Azure Bicep'
+  #   inputs:
+  #     azureSubscription: 'aks_spn'
+  #     scriptType: 'batch'
+  #     scriptLocation: 'inlineScript'
+  #     inlineScript: 'az bicep install'
+
+  - task: CopyFiles@2
     inputs:
-      azureSubscription: 'aks_spn'
-      scriptType: 'batch'
-      scriptLocation: 'inlineScript'
-      inlineScript: 'az bicep install'
+      SourceFolder: '$(Build.ArtifactStagingDirectory)'
+      Contents: '**/*.json'
+      TargetFolder: '${System.DefaultWorkingDirectory}'
 
   - task: ArchiveFiles@2
     inputs:
